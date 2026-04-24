@@ -1,0 +1,636 @@
+{
+  "settings": {
+    "embedding_model": "text-embedding-3-small",
+    "retriever_top_k": 4,
+    "message_trim_max_tokens": 1800,
+    "default_tone": "professional_empathetic"
+  },
+
+  "kb_articles": [
+
+    {
+      "id": "kb_billing_duplicate_charge",
+      "title": "Duplicate Billing Charge Policy",
+      "category": "billing",
+      "tags": ["billing", "duplicate charge", "invoice", "review"],
+      "text": "If a customer reports being charged twice, apologize, confirm the billing period and affected service, check whether a refund review is already open, and route account-specific correction requests to billing support rather than promising an immediate refund."
+    },
+
+    {
+      "id": "kb_billing_refund_review",
+      "title": "Refund Review and Pending Credit Guidance",
+      "category": "billing",
+      "tags": ["billing", "refund", "credit", "pending"],
+      "text": "Refunds and credits require account review before confirmation. If a refund is already pending, acknowledge the review status and avoid setting a payout date unless billing support has already approved and documented one."
+    },
+
+    {
+      "id": "kb_billing_cycle_payment_dispute",
+      "title": "Billing Cycle Timing and Payment Method Disputes",
+      "category": "billing",
+      "tags": ["billing", "billing cycle", "payment method", "invoice period", "dispute"],
+      "text": "When a customer disputes a charge related to billing cycle timing, invoice period confusion, or an unexpected payment method deduction, ask for the invoice date and the last four digits of the payment method if relevant. Do not confirm a billing error or promise a correction until billing support has reviewed the account transaction history. Route to billing support for any payment method dispute that cannot be resolved by clarifying the invoice period."
+    },
+
+    {
+      "id": "kb_technical_connectivity_outage",
+      "title": "Connectivity Issue Initial Handling",
+      "category": "technical",
+      "tags": ["technical", "internet", "outage", "connectivity"],
+      "text": "For connectivity issues, confirm whether the problem affects one user or a wider site, ask when the issue started, and check for outage indicators. Tickets that block normal work should be prioritized higher than routine troubleshooting questions."
+    },
+
+    {
+      "id": "kb_technical_known_outage",
+      "title": "Known Outage Communication",
+      "category": "technical",
+      "tags": ["technical", "known outage", "incident", "status"],
+      "text": "When a known outage already exists, acknowledge that the issue is being tracked, avoid inventing a resolution time, and route customers to technical support for incident handling if they need account-specific updates or impact review."
+    },
+
+    {
+      "id": "kb_technical_app_session_logout",
+      "title": "App Session Expiry and Repeated Logout Handling",
+      "category": "technical",
+      "tags": ["technical", "app", "session", "logout", "mobile", "token expiry"],
+      "text": "If a customer reports being logged out of the app repeatedly on mobile or desktop, ask whether the issue started after a recent app update, a device OS update, or a password change. Check whether the session expiry setting is configured correctly on the account. Do not assume the cause without diagnostic information. Route to technical support for session token or authentication configuration issues. If the app is on mobile, ask for the device model and OS version before committing to a resolution path."
+    },
+
+    {
+      "id": "kb_technical_business_priority",
+      "title": "Business Tier Urgency Handling",
+      "category": "technical",
+      "tags": ["technical", "business", "priority", "urgent"],
+      "text": "Business-tier customers reporting service impact to multiple staff or an office location should be treated with elevated urgency. Critical business interruption should be routed immediately to technical support and may require manual specialist attention if impact is severe."
+    },
+
+    {
+      "id": "kb_account_login_reset",
+      "title": "Login and Password Reset Guidance",
+      "category": "account_access",
+      "tags": ["account access", "login", "password reset", "authentication"],
+      "text": "If a customer cannot sign in after a password change, confirm whether the new password was accepted, whether the reset link was used successfully, and whether the failure happens before or after entering credentials. Direct access restoration should follow account-access procedures, not informal guesswork."
+    },
+
+    {
+      "id": "kb_account_mfa_lockout",
+      "title": "MFA Lockout and Verification Rule",
+      "category": "account_access",
+      "tags": ["account access", "mfa", "verification", "lockout"],
+      "text": "For MFA lockout or verification failures, collect only the minimum details needed to verify identity safely and route the case to account access support. Do not disable MFA or confirm sensitive account changes without the proper verification path."
+    },
+
+    {
+      "id": "kb_cancellation_retention",
+      "title": "Cancellation Threat and Retention Handling",
+      "category": "cancellation",
+      "tags": ["cancellation", "retention", "save", "churn risk"],
+      "text": "If a customer threatens cancellation, acknowledge the frustration, avoid arguing, confirm whether they want a save attempt or a formal cancellation path, and route urgent retention-risk cases to the retention team for follow-up."
+    },
+
+    {
+      "id": "kb_cancellation_inquiry_non_urgent",
+      "title": "Non-Urgent Cancellation Inquiry Handling",
+      "category": "cancellation",
+      "tags": ["cancellation", "inquiry", "downgrade", "non urgent"],
+      "text": "If a customer asks about cancellation options without expressing anger or urgency, treat it as an informational request. Provide a factual description of the cancellation process and available options such as pausing or downgrading the account. Route to service operations for processing if the customer confirms they want to proceed. Do not pressure the customer or make unsupported retention offers."
+    },
+
+    {
+      "id": "kb_complaint_escalation",
+      "title": "Formal Complaint Escalation",
+      "category": "complaint",
+      "tags": ["complaint", "escalation", "supervisor", "review"],
+      "text": "Complaints involving repeated failures, ignored contacts, or explicit requests for escalation should be acknowledged clearly and routed to the complaints team. Do not dismiss the concern or promise an outcome before the review is completed."
+    },
+
+    {
+      "id": "kb_complaint_standard_handling",
+      "title": "Standard Complaint Acknowledgement and Routing",
+      "category": "complaint",
+      "tags": ["complaint", "acknowledgement", "medium priority", "standard"],
+      "text": "For complaints that do not involve repeated failures or urgent risk, acknowledge the customer's concern clearly and confirm that the case has been logged. Provide a realistic next-step description without committing to a timeline. Route to the complaints team for review and follow-up. Avoid defensive language or minimising the complaint."
+    },
+
+    {
+      "id": "kb_legal_regulatory_escalation",
+      "title": "Legal and Regulatory Threat Handling",
+      "category": "complaint",
+      "tags": ["legal", "regulatory", "regulator", "lawyer", "formal complaint", "escalation", "authority"],
+      "text": "If a customer mentions contacting a regulator, ombudsman, consumer authority, or legal representative, do not argue, dismiss the threat, or make commitments about outcomes. Acknowledge the concern professionally, confirm that the case is being escalated, and route immediately to a human specialist. Do not attempt to resolve legally sensitive complaints through automated or first-line support. Log the mention of regulatory or legal intent explicitly in the case notes."
+    },
+
+    {
+      "id": "kb_service_missing_information",
+      "title": "Clarification When Ticket Details Are Missing",
+      "category": "service_request",
+      "tags": ["service request", "clarification", "missing info", "triage"],
+      "text": "If a ticket is too vague to classify safely, ask for the minimum missing details such as account ID, affected service, error message, and time of occurrence. Clarification should happen before committing to a route or resolution."
+    },
+
+    {
+      "id": "kb_service_manual_specialist_escalation",
+      "title": "Manual Specialist Escalation Policy",
+      "category": "service_request",
+      "tags": ["manual escalation", "specialist", "review", "exception"],
+      "text": "Route a ticket to a human specialist when the evidence is conflicting, the requested action is high risk, the user mentions legal or regulatory escalation, or the system lacks enough grounded information to provide a safe answer."
+    },
+
+    {
+      "id": "kb_service_request_general_updates",
+      "title": "General Service Request Handling",
+      "category": "service_request",
+      "tags": ["service request", "update", "change", "non urgent"],
+      "text": "Routine service requests such as update requests, non-urgent fixes, or follow-up coordination should be routed to service operations once the request is specific enough to act on. Keep the reply concise and set expectations conservatively."
+    }
+
+  ],
+
+  "account_context": {
+
+    "acct_1001": {
+      "open_ticket": true,
+      "last_ticket_summary": "Duplicate billing complaint from the previous cycle; refund review already opened.",
+      "refund_pending": true,
+      "known_outage": false,
+      "service_tier": "consumer_plus",
+      "last_route_to_team": "billing_support",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "email",
+      "account_age_months": 18,
+      "total_tickets_last_90_days": 3,
+      "satisfaction_score": "medium"
+    },
+
+    "acct_1002": {
+      "open_ticket": true,
+      "last_ticket_summary": "Office connectivity incident reported this morning; linked to a known outage.",
+      "refund_pending": false,
+      "known_outage": true,
+      "service_tier": "business_plus",
+      "last_route_to_team": "technical_support",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "phone",
+      "account_age_months": 36,
+      "total_tickets_last_90_days": 2,
+      "satisfaction_score": "high"
+    },
+
+    "acct_1003": {
+      "open_ticket": false,
+      "last_ticket_summary": "Last contact was a resolved password reset request two months ago.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "consumer_basic",
+      "last_route_to_team": "account_access_support",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "chat",
+      "account_age_months": 9,
+      "total_tickets_last_90_days": 1,
+      "satisfaction_score": "high"
+    },
+
+    "acct_1004": {
+      "open_ticket": true,
+      "last_ticket_summary": "Customer reported repeated dissatisfaction and mentioned cancellation during last interaction.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "consumer_premium",
+      "last_route_to_team": "retention_team",
+      "mfa_enabled": false,
+      "preferred_contact_channel": "phone",
+      "account_age_months": 42,
+      "total_tickets_last_90_days": 7,
+      "satisfaction_score": "low"
+    },
+
+    "acct_1005": {
+      "open_ticket": false,
+      "last_ticket_summary": "Business account with prior service configuration questions; no active incident.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "business_standard",
+      "last_route_to_team": "service_ops",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "email",
+      "account_age_months": 24,
+      "total_tickets_last_90_days": 1,
+      "satisfaction_score": "high"
+    },
+
+    "acct_1006": {
+      "open_ticket": true,
+      "last_ticket_summary": "Formal complaint opened after delayed response on a previous technical issue.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "consumer_plus",
+      "last_route_to_team": "complaints_team",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "email",
+      "account_age_months": 15,
+      "total_tickets_last_90_days": 5,
+      "satisfaction_score": "low"
+    },
+
+    "acct_1007": {
+      "open_ticket": false,
+      "last_ticket_summary": "No open ticket; last interaction was a resolved app stability question.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "consumer_basic",
+      "last_route_to_team": "technical_support",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "chat",
+      "account_age_months": 6,
+      "total_tickets_last_90_days": 2,
+      "satisfaction_score": "medium"
+    },
+
+    "acct_1008": {
+      "open_ticket": true,
+      "last_ticket_summary": "Recent login failure after password reset; customer could not complete verification.",
+      "refund_pending": false,
+      "known_outage": false,
+      "service_tier": "consumer_plus",
+      "last_route_to_team": "account_access_support",
+      "mfa_enabled": false,
+      "preferred_contact_channel": "email",
+      "account_age_months": 11,
+      "total_tickets_last_90_days": 4,
+      "satisfaction_score": "low"
+    },
+
+    "acct_1009": {
+      "open_ticket": true,
+      "last_ticket_summary": "Customer mentioned contacting the consumer regulator after an unresolved billing dispute.",
+      "refund_pending": true,
+      "known_outage": false,
+      "service_tier": "consumer_plus",
+      "last_route_to_team": "human_specialist",
+      "mfa_enabled": true,
+      "preferred_contact_channel": "email",
+      "account_age_months": 27,
+      "total_tickets_last_90_days": 6,
+      "satisfaction_score": "low"
+    }
+
+  },
+
+  "routing_rules": [
+
+    {
+      "trigger_category": "billing",
+      "priority": "critical",
+      "route_to_team": "human_specialist",
+      "recommended_action": "escalate_billing_crisis_for_manual_senior_review"
+    },
+    {
+      "trigger_category": "billing",
+      "priority": "high",
+      "route_to_team": "billing_support",
+      "recommended_action": "review_payment_activity_and_check_refund_status"
+    },
+    {
+      "trigger_category": "billing",
+      "priority": "medium",
+      "route_to_team": "billing_support",
+      "recommended_action": "validate_invoice_period_and_request_account_details"
+    },
+    {
+      "trigger_category": "billing",
+      "priority": "low",
+      "route_to_team": "service_ops",
+      "recommended_action": "request_clarification_on_billing_query_before_routing"
+    },
+
+    {
+      "trigger_category": "technical",
+      "priority": "critical",
+      "route_to_team": "technical_support",
+      "recommended_action": "declare_incident_handling_and_fast_track_business_impact"
+    },
+    {
+      "trigger_category": "technical",
+      "priority": "high",
+      "route_to_team": "technical_support",
+      "recommended_action": "check_known_incidents_and_begin_troubleshooting"
+    },
+    {
+      "trigger_category": "technical",
+      "priority": "medium",
+      "route_to_team": "technical_support",
+      "recommended_action": "collect_device_context_and_start_standard_troubleshooting"
+    },
+    {
+      "trigger_category": "technical",
+      "priority": "low",
+      "route_to_team": "service_ops",
+      "recommended_action": "log_non_urgent_technical_query_and_gather_more_context"
+    },
+
+    {
+      "trigger_category": "account_access",
+      "priority": "critical",
+      "route_to_team": "human_specialist",
+      "recommended_action": "perform_emergency_manual_verification_for_critical_access_failure"
+    },
+    {
+      "trigger_category": "account_access",
+      "priority": "high",
+      "route_to_team": "human_specialist",
+      "recommended_action": "perform_manual_verification_for_sensitive_access_issue"
+    },
+    {
+      "trigger_category": "account_access",
+      "priority": "medium",
+      "route_to_team": "account_access_support",
+      "recommended_action": "verify_identity_and_restore_safe_access"
+    },
+    {
+      "trigger_category": "account_access",
+      "priority": "low",
+      "route_to_team": "account_access_support",
+      "recommended_action": "gather_access_details_and_route_for_standard_verification"
+    },
+
+    {
+      "trigger_category": "cancellation",
+      "priority": "high",
+      "route_to_team": "retention_team",
+      "recommended_action": "acknowledge_churn_risk_and_offer_retention_review"
+    },
+    {
+      "trigger_category": "cancellation",
+      "priority": "medium",
+      "route_to_team": "retention_team",
+      "recommended_action": "present_cancellation_options_and_offer_save_attempt"
+    },
+    {
+      "trigger_category": "cancellation",
+      "priority": "low",
+      "route_to_team": "service_ops",
+      "recommended_action": "provide_cancellation_process_information_and_confirm_intent"
+    },
+
+    {
+      "trigger_category": "complaint",
+      "priority": "critical",
+      "route_to_team": "human_specialist",
+      "recommended_action": "escalate_sensitive_complaint_for_manual_handling"
+    },
+    {
+      "trigger_category": "complaint",
+      "priority": "high",
+      "route_to_team": "complaints_team",
+      "recommended_action": "open_formal_complaint_review_and_log_customer_history"
+    },
+    {
+      "trigger_category": "complaint",
+      "priority": "medium",
+      "route_to_team": "complaints_team",
+      "recommended_action": "acknowledge_complaint_log_case_and_set_review_expectation"
+    },
+    {
+      "trigger_category": "complaint",
+      "priority": "low",
+      "route_to_team": "complaints_team",
+      "recommended_action": "log_complaint_and_confirm_receipt_with_conservative_timeline"
+    },
+
+    {
+      "trigger_category": "service_request",
+      "priority": "high",
+      "route_to_team": "service_ops",
+      "recommended_action": "prioritise_service_request_and_begin_coordination"
+    },
+    {
+      "trigger_category": "service_request",
+      "priority": "medium",
+      "route_to_team": "service_ops",
+      "recommended_action": "collect_required_details_and_schedule_standard_handling"
+    },
+    {
+      "trigger_category": "service_request",
+      "priority": "low",
+      "route_to_team": "service_ops",
+      "recommended_action": "request_clarification_before_committing_to_resolution"
+    },
+
+    {
+      "trigger_category": "unknown",
+      "priority": "high",
+      "route_to_team": "human_specialist",
+      "recommended_action": "route_unclassified_high_risk_ticket_to_specialist_for_manual_review"
+    },
+    {
+      "trigger_category": "unknown",
+      "priority": "medium",
+      "route_to_team": "service_ops",
+      "recommended_action": "request_clarification_and_reclassify_before_routing"
+    },
+    {
+      "trigger_category": "unknown",
+      "priority": "low",
+      "route_to_team": "service_ops",
+      "recommended_action": "request_clarification_and_reclassify_before_routing"
+    }
+
+  ],
+
+  "memory_defaults": {
+
+    "global:routing_preferences": {
+      "prefer_manual_specialist_for_legal_or_regulatory_risk": true,
+      "prefer_existing_open_ticket_team_when_context_matches": true,
+      "prefer_human_specialist_for_satisfaction_score_low_with_escalation_history": true
+    },
+    "global:tone_rules": {
+      "default_tone": "professional_empathetic",
+      "frustrated_user_tone": "calm_reassuring",
+      "legal_threat_tone": "formal_neutral",
+      "avoid_overpromising": true,
+      "avoid_defensive_language": true
+    },
+
+    "user:acct_1001:preferences": {
+      "reply_style": "concise_status_updates",
+      "reassurance_preference": "wants_clear_next_steps",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1001:history": {
+      "recent_escalation_flag": false,
+      "last_known_route": "billing_support",
+      "last_category": "billing"
+    },
+
+    "user:acct_1002:preferences": {
+      "reply_style": "direct_business_updates",
+      "escalation_preference": "prioritize_service_restoration",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1002:history": {
+      "recent_escalation_flag": true,
+      "last_known_route": "technical_support",
+      "last_category": "technical"
+    },
+
+    "user:acct_1003:preferences": {
+      "reply_style": "friendly_guided",
+      "reassurance_preference": "prefers_step_by_step",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1003:history": {
+      "recent_escalation_flag": false,
+      "last_known_route": "account_access_support",
+      "last_category": "account_access"
+    },
+
+    "user:acct_1004:preferences": {
+      "reply_style": "empathetic_direct",
+      "reassurance_preference": "wants_senior_attention",
+      "tone": "empathetic"
+    },
+    "user:acct_1004:history": {
+      "recent_escalation_flag": true,
+      "last_known_route": "retention_team",
+      "last_category": "cancellation"
+    },
+
+    "user:acct_1005:preferences": {
+      "reply_style": "formal_business_summary",
+      "reassurance_preference": "prefers_written_confirmation",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1005:history": {
+      "recent_escalation_flag": false,
+      "last_known_route": "service_ops",
+      "last_category": "service_request"
+    },
+
+    "user:acct_1006:preferences": {
+      "reply_style": "formal_acknowledgement",
+      "reassurance_preference": "wants_complaint_logged_explicitly",
+      "tone": "empathetic"
+    },
+    "user:acct_1006:history": {
+      "recent_escalation_flag": true,
+      "last_known_route": "complaints_team",
+      "last_category": "complaint"
+    },
+
+    "user:acct_1007:preferences": {
+      "reply_style": "concise_friendly",
+      "reassurance_preference": "prefers_quick_fix_guidance",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1007:history": {
+      "recent_escalation_flag": false,
+      "last_known_route": "technical_support",
+      "last_category": "technical"
+    },
+
+    "user:acct_1008:preferences": {
+      "reply_style": "step_by_step_guidance",
+      "reassurance_preference": "prefers_security_explanations",
+      "tone": "professional_empathetic"
+    },
+    "user:acct_1008:history": {
+      "recent_escalation_flag": false,
+      "last_known_route": "account_access_support",
+      "last_category": "account_access"
+    },
+
+    "user:acct_1009:preferences": {
+      "reply_style": "formal_neutral",
+      "reassurance_preference": "wants_escalation_confirmed_in_writing",
+      "tone": "formal_neutral"
+    },
+    "user:acct_1009:history": {
+      "recent_escalation_flag": true,
+      "last_known_route": "human_specialist",
+      "last_category": "complaint"
+    }
+
+  },
+
+  "test_cases": [
+
+    {
+      "id": "test_01_duplicate_billing",
+      "input": "Account acct_1001 here. I was charged twice on this month's bill and nobody answered my last email. What is happening?",
+      "expected_category": "billing",
+      "expected_priority": "high",
+      "expected_route": "billing_support",
+      "expected_requires_escalation": true,
+      "simulate_human_decision": "approve",
+      "notes": "Matches refund-pending account context and duplicate-charge KB guidance. HITL: approve path."
+    },
+
+    {
+      "id": "test_02_business_outage",
+      "input": "This is acct_1002. Our office internet has been down since this morning, multiple people cannot work, and we need urgent help.",
+      "expected_category": "technical",
+      "expected_priority": "critical",
+      "expected_route": "technical_support",
+      "expected_requires_escalation": true,
+      "simulate_human_decision": "escalate_manually",
+      "notes": "Business-tier outage with known outage context triggers critical handling. HITL: manual escalation path."
+    },
+
+    {
+      "id": "test_03_login_access",
+      "input": "I'm on acct_1008 and I still cannot log in after resetting my password yesterday. The code step is also failing.",
+      "expected_category": "account_access",
+      "expected_priority": "medium",
+      "expected_route": "account_access_support",
+      "expected_requires_escalation": false,
+      "simulate_human_decision": "approve",
+      "notes": "Grounded in login-reset and MFA lockout KB articles. HITL: approve path."
+    },
+
+    {
+      "id": "test_04_cancellation_threat",
+      "input": "acct_1004. If this is not fixed today, cancel everything. I am done with this service and I want someone senior to look at it.",
+      "expected_category": "cancellation",
+      "expected_priority": "high",
+      "expected_route": "retention_team",
+      "expected_requires_escalation": true,
+      "simulate_human_decision": "revise: strengthen the empathetic opening and make the next steps more concrete, keep it under 80 words",
+      "notes": "Retention-risk with existing escalation history in long-term memory. HITL: revision path. Memory write-back should record tone=empathetic."
+    },
+
+    {
+      "id": "test_05_incomplete_ticket",
+      "input": "My account is broken and this whole thing is not working.",
+      "expected_category": "service_request",
+      "expected_priority": "low",
+      "expected_route": "service_ops",
+      "expected_requires_escalation": false,
+      "simulate_human_decision": "approve",
+      "notes": "Intentionally ambiguous; system should route to clarification node before reaching HITL. If HITL is reached, approve."
+    },
+
+    {
+      "id": "test_06_app_logout_revision",
+      "input": "Hi, this is acct_1007. Your app keeps logging me out every hour on mobile, but I can sign back in. Please help.",
+      "expected_category": "technical",
+      "expected_priority": "medium",
+      "expected_route": "technical_support",
+      "expected_requires_escalation": false,
+      "simulate_human_decision": "revise: ask specifically about the device OS version and whether the issue started after a recent app update",
+      "notes": "Normal technical issue using the new app-session KB article. HITL: revision path to demonstrate the revise loop. Message history must contain both original draft and revised version."
+    },
+
+    {
+      "id": "test_07_legal_regulatory_threat",
+      "input": "This is acct_1009. I have been waiting three weeks for a resolution on my billing dispute and I am now going to report this to the consumer regulator if I do not hear back by end of day.",
+      "expected_category": "complaint",
+      "expected_priority": "critical",
+      "expected_route": "human_specialist",
+      "expected_requires_escalation": true,
+      "simulate_human_decision": "escalate_manually",
+      "notes": "Legal and regulatory threat should trigger the new kb_legal_regulatory_escalation article, force human_specialist routing, and use the formal_neutral tone from acct_1009 long-term memory. HITL: manual escalation path."
+    }
+
+  ]
+}
