@@ -9,14 +9,14 @@
 > It is intentionally **condensed** (no fluff) yet **max detailed** (high information density).
 >
 > Sources synthesized: 
-> - [03.LangChain-Agents-Tools.pdf](03.LangChain-Agents-Tools.pdf?EntityRepresentationId=3c27ffe6-30c3-4caf-ab98-23f10da4b9c2) [3](03.LangChain-Agents-Tools.pdf)  
-> - [05.LangChain-Memory-Human-Loop.pdf](05.LangChain-Memory-Human-Loop.pdf?EntityRepresentationId=d73e27af-b28c-4618-ac78-1d115dc7edab) [4](05.LangChain-Memory-Human-Loop.pdf)  
-> - [07.LangGraph-Multi-Agent-Systems.pdf](07.LangGraph-Multi-Agent-Systems.pdf?EntityRepresentationId=54f82d25-6b6a-4ea6-aa58-7856f588d72a) [5](07.LangGraph-Multi-Agent-Systems.pdf)  
-> - [04.Exercise-LangChain-Agents-Tools.pdf](04.Exercise-LangChain-Agents-Tools.pdf?EntityRepresentationId=a8ffb8b8-d82c-4842-8952-54c16a76a17e) [6](04.Exercise-LangChain-Agents-Tools.pdf)  
-> - [06.Exercise-LangChain-Memory-Human-Loop.pdf](06.Exercise-LangChain-Memory-Human-Loop.pdf?EntityRepresentationId=5dc52a80-eabe-479e-8afa-8ab1763505c6) [7](06.Exercise-LangChain-Memory-Human-Loop.pdf)  
-> - [08.Exercise-LangGraph-Multi-Agent-Systems.pdf](08.Exercise-LangGraph-Multi-Agent-Systems.pdf?EntityRepresentationId=897f9565-7dfd-4be6-8672-74a704505c1f) [8](08.Exercise-LangGraph-Multi-Agent-Systems.pdf)  
-> - [Project-Assignment.pdf](Project-Assignment.pdf?EntityRepresentationId=f1418b95-0b94-4074-95ec-c9a9d4dc7082) [2](Project-Assignment.pdf)  
-> - Existing synthesis baseline: [ai_agents_course_blueprint.md](ai_agents_course_blueprint.md?EntityRepresentationId=2c99355a-1c68-498e-98aa-f41ccc69fbe9) [1](ai_agents_course_blueprint.md)  
+> - [03.LangChain-Agents-Tools.pdf][3](03.LangChain-Agents-Tools.pdf)  
+> - [05.LangChain-Memory-Human-Loop.pdf] [4](05.LangChain-Memory-Human-Loop.pdf)  
+> - [07.LangGraph-Multi-Agent-Systems.pdf][5](07.LangGraph-Multi-Agent-Systems.pdf)  
+> - [04.Exercise-LangChain-Agents-Tools.pdf] [6](04.Exercise-LangChain-Agents-Tools.pdf)  
+> - [06.Exercise-LangChain-Memory-Human-Loop.pdf] [7](06.Exercise-LangChain-Memory-Human-Loop.pdf)  
+> - [08.Exercise-LangGraph-Multi-Agent-Systems.pdf][8](08.Exercise-LangGraph-Multi-Agent-Systems.pdf)  
+> - [Project-Assignment.pdf] [2](Project-Assignment.pdf)  
+
 
 ---
 
