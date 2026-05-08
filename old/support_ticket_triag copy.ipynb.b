@@ -115,11 +115,15 @@
    ]
   },
   {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "b6f05fe7",
-   "metadata": {},
-   "outputs": [],
+   "cell_type": "markdown",
+   "id": "77258325",
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/"
+    },
+    "id": "77258325",
+    "outputId": "246e027a-4c73-483b-bf1c-4aaa9f98074e"
+   },
    "source": [
     "%pip install -q --upgrade-strategy only-if-needed \\\n",
     "  \"langchain==0.3.16\" \\\n",
@@ -2950,7 +2954,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 67,
+   "execution_count": null,
    "id": "e4065583",
    "metadata": {
     "colab": {
@@ -2978,51 +2982,7 @@
       "  [load_memory] account_id=acct_1004  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
       "  [triage] category=cancellation  priority=high  sentiment=angry  escalation=True  account_id=acct_1004\n",
       "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=high  kb_category=cancellation\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'cancellation', 'priority': 'high'}  → route_to_team=retention_team\n",
-      "  [resolve] route=retention_team  action=acknowledge_churn_risk_and_offer_retention_review\n",
-      "  [draft] tone=empathetic  length=619 chars\n",
-      "  [route] draft → review  (reason: requires_escalation=True)\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "   thread_id = 4574baaa-9991-4433-85b9-599b2316022d\n",
-      "   [NOTE] Interrupt detected via graph.get_state() (LangGraph 0.2.x fallback)\n",
-      "   Interrupted at review_node. Draft: I completely understand your frustration and sincerely apologize for the inconve...\n",
-      ">> STEP 2: resume_workflow() — decision: revise: strengthen the empathetic opening and make the next steps more\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  [review] Decision: REVISE —  strengthen the empathetic opening and make...\n",
-      "  [revise] Revised draft: I understand how frustrating this situation is, and I sincerely apologize for th...\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "   [💰 tokens] calls=5  in=3,896  out=326  cost=$0.00078\n",
-      "\n",
-      "  ── Agent trace ──────────────────────────────\n",
-      "  … → review_node → revise_node →   thread=4574baaa…\n",
-      "  category=cancellation  priority=high\n",
-      "  route=retention_team  escalation=True\n",
-      "  ────────────────────────────────────────────\n",
-      "\n",
-      "\n",
-      "==============================================================\n",
-      "  RESULT: test_04_cancellation_threat\n",
-      "==============================================================\n",
-      "  status                    : revised\n",
-      "  category                  : cancellation\n",
-      "  subcategory               : request to cancel service\n",
-      "  priority                  : high\n",
-      "  sentiment                 : angry\n",
-      "  requires_escalation       : True\n",
-      "  route_to_team             : retention_team\n",
-      "  recommended_action        : acknowledge_churn_risk_and_offer_retention_review\n",
-      "  human_approved            : False\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  I understand how frustrating this situation is, and I sincerely apologize for the inconvenience. Your concerns are important to us, and I will escalate your case to our Customer Success team immediately. They will review your account and reach out to you within 1 business day to address the issues you've faced. Thank you for your patience as we work to resolve this matter.\n",
-      "\n",
-      "\n",
-      "  Long-term memory — acct_1004:\n",
-      "    [preferences] {'reassurance_preference': 'wants_senior_attention', 'reply_style': 'empathetic_direct', 'tone': 'empathetic'}\n",
-      "    [history] {'last_category': 'cancellation', 'last_known_route': 'retention_team', 'recent_escalation_flag': True}\n"
+      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=high  kb_category=cancellation\n"
      ]
     }
    ],
@@ -3045,7 +3005,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 68,
+   "execution_count": null,
    "id": "1bb0282c",
    "metadata": {
     "colab": {
@@ -3054,57 +3014,7 @@
     "id": "1bb0282c",
     "outputId": "5766196e-3099-42ae-bef5-8014aedf3b7a"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "=================================================================\n",
-      "  TEST : test_05_incomplete_ticket\n",
-      "=================================================================\n",
-      "  INPUT    : My account is broken and this whole thing is not working.\n",
-      "  EXPECTED : category=service_request  priority=low\n",
-      "  EXPECTED : route=service_ops  escalation=False\n",
-      "  DECISION : approve\n",
-      "  NOTES    : Intentionally ambiguous; system should route to clarification node before reaching HITL. If HITL is reached, approve.\n",
-      "\n",
-      ">> STEP 1: execute_workflow()\n",
-      "  [load_memory] account_id=anonymous  prefs=[]  history=[]\n",
-      "  [triage] category=service_request  priority=low  sentiment=frustrated  escalation=False  account_id=—\n",
-      "  [route] → clarify (reason: missing account_id)\n",
-      "  [clarify] route_to_team=service_ops  missing=['specific details about the issue', 'account_id if applicable']\n",
-      "   thread_id = bbf37493-8af4-4c58-b50e-fbd60f83080e\n",
-      "   No interrupt — workflow completed without HITL (auto-finalize or clarify).\n",
-      "   [💰 tokens] calls=1  in=999  out=44  cost=$0.00018\n",
-      "\n",
-      "  ── Agent trace ──────────────────────────────\n",
-      "  triage_node → clarify_node [CLARIFICATION]  thread=bbf37493…\n",
-      "  category=service_request  priority=low\n",
-      "  route=service_ops  escalation=False\n",
-      "  ────────────────────────────────────────────\n",
-      "\n",
-      "\n",
-      "==============================================================\n",
-      "  RESULT: test_05_incomplete_ticket\n",
-      "==============================================================\n",
-      "  status                    : needs_clarification\n",
-      "  category                  : service_request\n",
-      "  subcategory               : generic issue\n",
-      "  priority                  : low\n",
-      "  sentiment                 : frustrated\n",
-      "  requires_escalation       : False\n",
-      "  route_to_team             : service_ops\n",
-      "  human_approved            : False\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  Thank you for reaching out. To help you as quickly as possible, could you please provide: specific details about the issue, your account number if you have one (e.g. acct_1234)? Once we have these details we will route your case to the right team.\n",
-      "\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "result_et = run_test_case(\"test_05_incomplete_ticket\")\n"
    ]
@@ -3125,7 +3035,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 69,
+   "execution_count": null,
    "id": "cbf56abf",
    "metadata": {
     "colab": {
@@ -3134,80 +3044,7 @@
     "id": "cbf56abf",
     "outputId": "8f1d5d9a-5b59-4952-983a-2ac1a09eeff9"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "=================================================================\n",
-      "  TEST : test_06_app_logout_revision\n",
-      "=================================================================\n",
-      "  INPUT    : Hi, this is acct_1007. Your app keeps logging me out every hour on mobile, but I can sign back in. Please help.\n",
-      "  EXPECTED : category=technical  priority=medium\n",
-      "  EXPECTED : route=technical_support  escalation=False\n",
-      "  DECISION : revise: ask specifically about the device OS version and whether the i\n",
-      "  NOTES    : Normal technical issue using the new app-session KB article. HITL: revision path to demonstrate the revise loop. Message history must contain both original draft and revised version.\n",
-      "\n",
-      ">> STEP 1: execute_workflow()\n",
-      "  [load_memory] account_id=acct_1007  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=account_access  priority=medium  sentiment=neutral  escalation=False  account_id=acct_1007\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=False  priority_signal=medium  kb_category=technical\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'technical', 'priority': 'medium'}  → route_to_team=technical_support\n",
-      "  [resolve] route=technical_support  action=collect_device_context_and_start_standard_troubles\n",
-      "  [draft] tone=professional_empathetic  length=660 chars\n",
-      "  [route] draft → finalize  (auto-approve: priority=medium, category=technical, escalation=False)\n",
-      "  [finalize] Memory written back for acct_1007.\n",
-      "   thread_id = 2998a5a5-1c8e-4c8d-860e-18d997012bb9\n",
-      "   No interrupt — workflow completed without HITL (auto-finalize or clarify).\n",
-      "   [💰 tokens] calls=4  in=3,685  out=253  cost=$0.00070\n",
-      "\n",
-      "  ── Agent trace ──────────────────────────────\n",
-      "  … → finalize_node [APPROVED]  thread=2998a5a5…\n",
-      "  category=technical  priority=medium\n",
-      "  route=technical_support  escalation=False\n",
-      "  ────────────────────────────────────────────\n",
-      "\n",
-      "\n",
-      "==============================================================\n",
-      "  RESULT: test_06_app_logout_revision\n",
-      "==============================================================\n",
-      "  status                    : approved\n",
-      "  category                  : technical\n",
-      "  subcategory               : app logging out\n",
-      "  priority                  : medium\n",
-      "  sentiment                 : neutral\n",
-      "  requires_escalation       : False\n",
-      "  route_to_team             : technical_support\n",
-      "  recommended_action        : collect_device_context_and_start_standard_troubleshooting\n",
-      "  human_approved            : True\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  Thank you for reaching out to us. I understand how frustrating it can be to experience frequent logouts from the app on your mobile device.\n",
-      "  \n",
-      "  To assist you better, I need to gather some additional information. Could you please provide the model of your device and the operating system version you are using? This will help our Technical Support team diagnose the issue more effectively.\n",
-      "  \n",
-      "  Once I have this information, I will escalate your case to our Technical Support team, who will begin troubleshooting the logout issue. You can expect to hear back from them within 2 business days.\n",
-      "  \n",
-      "  Thank you for your patience, and I look forward to resolving this for you!\n",
-      "\n",
-      "\n",
-      "  Long-term memory — acct_1007:\n",
-      "    [preferences] {'reassurance_preference': 'prefers_quick_fix_guidance', 'reply_style': 'concise_friendly', 'tone': 'professional_empathetic'}\n",
-      "    [history] {'last_category': 'technical', 'last_known_route': 'technical_support', 'recent_escalation_flag': False}\n",
-      "  [INFO] Test 6 path: auto-finalize\n",
-      "  [ASSERT] status=approved ✓   human_approved=True ✓   path=auto-finalize\n",
-      "\n",
-      "Message history (short-term memory):\n",
-      "  [0] user: Hi, this is acct_1007. Your app keeps logging me out every hour on mobile, but I can sign back in. Please help....\n",
-      "  [1] user: Hi, this is acct_1007. Your app keeps logging me out every hour on mobile, but I can sign back in. Please help....\n",
-      "  [2] assistant: Thank you for reaching out to us. I understand how frustrating it can be to experience frequent logouts from the app on ...\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "result_on = run_test_case(\"test_06_app_logout_revision\")\n",
     "\n",
@@ -3250,7 +3087,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 70,
+   "execution_count": null,
    "id": "815856db",
    "metadata": {
     "colab": {
@@ -3259,72 +3096,7 @@
     "id": "815856db",
     "outputId": "e88a14f5-4c2a-4cf3-e7fe-4bbaa5b450e6"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "=================================================================\n",
-      "  TEST : test_07_legal_regulatory_threat\n",
-      "=================================================================\n",
-      "  INPUT    : This is acct_1009. I have been waiting three weeks for a resolution on my billing dispute and I am now going to report this to the consumer regulator if I do not hear back by end of day.\n",
-      "  EXPECTED : category=complaint  priority=critical\n",
-      "  EXPECTED : route=human_specialist  escalation=True\n",
-      "  DECISION : escalate_manually\n",
-      "  NOTES    : Legal and regulatory threat should trigger the new kb_legal_regulatory_escalation article, force human_specialist routing, and use the formal_neutral tone from acct_1009 long-term memory. HITL: manual escalation path.\n",
-      "\n",
-      ">> STEP 1: execute_workflow()\n",
-      "  [load_memory] account_id=acct_1009  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=complaint  priority=critical  sentiment=angry  escalation=True  account_id=acct_1009\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=critical  kb_category=billing\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'complaint', 'priority': 'critical'}  → route_to_team=human_specialist\n",
-      "  [resolve] route=human_specialist  action=escalate_sensitive_complaint_for_manual_handling\n",
-      "  [draft] tone=formal_neutral  length=663 chars\n",
-      "  [route] draft → review  (reason: requires_escalation=True)\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "   thread_id = 120d6daf-e6d7-4138-9105-2a279d536a88\n",
-      "   [NOTE] Interrupt detected via graph.get_state() (LangGraph 0.2.x fallback)\n",
-      "   Interrupted at review_node. Draft: I completely understand your frustration and sincerely apologise for the inconve...\n",
-      ">> STEP 2: resume_workflow() — decision: escalate_manually\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  [review] Decision: ESCALATE MANUALLY\n",
-      "  [manual_escalation] Case escalated to human_specialist.\n",
-      "   [💰 tokens] calls=4  in=3,871  out=264  cost=$0.00074\n",
-      "\n",
-      "  ── Agent trace ──────────────────────────────\n",
-      "  … → manual_escalation_node [ESCALATED]  thread=120d6daf…\n",
-      "  category=complaint  priority=critical\n",
-      "  route=human_specialist  escalation=True\n",
-      "  ────────────────────────────────────────────\n",
-      "\n",
-      "\n",
-      "==============================================================\n",
-      "  RESULT: test_07_legal_regulatory_threat\n",
-      "==============================================================\n",
-      "  status                    : manual_escalation\n",
-      "  category                  : complaint\n",
-      "  subcategory               : billing dispute\n",
-      "  priority                  : critical\n",
-      "  sentiment                 : angry\n",
-      "  requires_escalation       : True\n",
-      "  route_to_team             : human_specialist\n",
-      "  recommended_action        : escalate_sensitive_complaint_for_manual_handling\n",
-      "  human_approved            : False\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  Your case has been escalated for manual handling by a support specialist. We will review the details and follow up through your preferred contact channel.\n",
-      "\n",
-      "\n",
-      "  Long-term memory — acct_1009:\n",
-      "    [preferences] {'reassurance_preference': 'wants_escalation_confirmed_in_writing', 'reply_style': 'formal_neutral', 'tone': 'formal_neutral'}\n",
-      "    [history] {'last_category': 'complaint', 'last_known_route': 'human_specialist', 'recent_escalation_flag': True}\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "result_le = run_test_case(\"test_07_legal_regulatory_threat\")\n"
    ]
@@ -3351,7 +3123,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 71,
+   "execution_count": null,
    "id": "d79ee7b0",
    "metadata": {
     "colab": {
@@ -3360,53 +3132,7 @@
     "id": "d79ee7b0",
     "outputId": "29ed2fe2-6c48-47c6-cb95-d465c6fb260a"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "=================================================================\n",
-      "  HITL SHOWCASE — Sub-run A: APPROVE\n",
-      "=================================================================\n",
-      "  [load_memory] account_id=acct_1001  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['escalation_flag', 'last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=billing  priority=high  sentiment=frustrated  escalation=True  account_id=acct_1001\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=high  kb_category=billing\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'billing', 'priority': 'high'}  → route_to_team=billing_support\n",
-      "  [resolve] route=billing_support  action=review_payment_activity_and_check_refund_status\n",
-      "  [draft] tone=empathetic  length=480 chars\n",
-      "  [route] draft → review  (reason: requires_escalation=True)\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  thread_id : 6485c390-b3d7-4945-be1b-c5dc2ec0decb\n",
-      "  status    : drafted\n",
-      "  [💰 tokens] calls=4  in=3,556  out=224  cost=$0.00067\n",
-      "  [WARN] No interrupt — clarify path taken, HITL not reached.\n",
-      "\n",
-      "==============================================================\n",
-      "  HITL-A (no interrupt)\n",
-      "==============================================================\n",
-      "  status                    : drafted\n",
-      "  category                  : billing\n",
-      "  subcategory               : duplicate charge\n",
-      "  priority                  : high\n",
-      "  sentiment                 : frustrated\n",
-      "  requires_escalation       : True\n",
-      "  route_to_team             : billing_support\n",
-      "  recommended_action        : review_payment_activity_and_check_refund_status\n",
-      "  human_approved            : False\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  I completely understand your frustration and sincerely apologise for the inconvenience. \n",
-      "  \n",
-      "  You have reported being charged twice for the Pro plan this month, and I can confirm that a refund review is already open for your account. Our Billing Support team is currently reviewing your payment activity to address this issue.\n",
-      "  \n",
-      "  They will provide you with an update as quickly as possible, typically within 1 business day. Thank you for your patience as we work to resolve this matter.\n",
-      "\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── HITL Sub-run A: APPROVE path ─────────────────────────────────────────────\n",
     "print(\"=\" * 65)\n",
@@ -3458,7 +3184,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 72,
+   "execution_count": null,
    "id": "8f402e8f",
    "metadata": {
     "colab": {
@@ -3467,65 +3193,7 @@
     "id": "8f402e8f",
     "outputId": "0f461841-50dd-445b-c52b-a3bf5e01166b"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "=================================================================\n",
-      "  HITL SHOWCASE — Sub-run B: AUTO-FINALIZE (no HITL)\n",
-      "=================================================================\n",
-      "  [load_memory] account_id=acct_1002  prefs=['escalation_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=technical  priority=medium  sentiment=neutral  escalation=False  account_id=acct_1002\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=False  priority_signal=low  kb_category=technical\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'technical', 'priority': 'low'}  → route_to_team=service_ops\n",
-      "  [resolve] route=service_ops  action=log_non_urgent_technical_query_and_gather_more_con\n",
-      "  [draft] tone=professional_empathetic  length=687 chars\n",
-      "  [route] draft → finalize  (auto-approve: priority=low, category=technical, escalation=False)\n",
-      "  [finalize] Memory written back for acct_1002.\n",
-      "  thread_id : 3ecd20ad-f92e-487a-bcf4-2f8b1c9bce86\n",
-      "  status    : approved\n",
-      "  priority  : low\n",
-      "  category  : technical\n",
-      "  escalation: False\n",
-      "  [💰 tokens] calls=4  in=3,630  out=285  cost=$0.00072\n",
-      "\n",
-      "  ── Agent trace ──────────────────────────────\n",
-      "  … → finalize_node [APPROVED]  thread=3ecd20ad…\n",
-      "  category=technical  priority=low\n",
-      "  route=service_ops  escalation=False\n",
-      "  ────────────────────────────────────────────\n",
-      "\n",
-      "\n",
-      "==============================================================\n",
-      "  HITL-B AUTO-FINALIZE result\n",
-      "==============================================================\n",
-      "  status                    : approved\n",
-      "  category                  : technical\n",
-      "  subcategory               : app crashing after update\n",
-      "  priority                  : low\n",
-      "  sentiment                 : neutral\n",
-      "  requires_escalation       : False\n",
-      "  route_to_team             : service_ops\n",
-      "  recommended_action        : log_non_urgent_technical_query_and_gather_more_context\n",
-      "  human_approved            : True\n",
-      "  errors                    : []\n",
-      "\n",
-      "  FINAL REPLY:\n",
-      "  --------------------------------------------------\n",
-      "  Thank you for reaching out to us. I understand that your app is crashing after the latest update on your iPhone 14, and I appreciate your patience as we work to resolve this issue.\n",
-      "  \n",
-      "  It appears that your app's crashing may be related to a known outage that is currently being tracked. To assist you further, I will need to gather more context about your device's operating system version and any other relevant details that could help us diagnose the issue.\n",
-      "  \n",
-      "  I will escalate this to our support team, who will review your case and reach out to you as quickly as possible, typically within 1–2 business days. Thank you for your understanding, and we are here to help you get this resolved.\n",
-      "\n",
-      "  [ASSERT] human_approved=True ✓   status=approved ✓   no interrupt ✓\n",
-      "\n",
-      "  ✅ Demonstrates conditional HITL bypass for low-risk tickets.\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── HITL Sub-run B: AUTO-FINALIZE path ───────────────────────────────────────\n",
     "# Ticket: app crash, technical/medium, no escalation flag\n",
@@ -3580,7 +3248,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 73,
+   "execution_count": null,
    "id": "ebd1d4e2",
    "metadata": {
     "colab": {
@@ -3589,22 +3257,7 @@
     "id": "ebd1d4e2",
     "outputId": "bbbbc008-7a2b-4902-fe4d-43a8f664b935"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "=================================================================\n",
-      "  ASSERTION GUARD — Pre-submission Coverage Check\n",
-      "=================================================================\n",
-      "  [OK] All 7 test results present.\n",
-      "  [OK] HITL approve path demonstrated.\n",
-      "  [OK] HITL revise path demonstrated.\n",
-      "\n",
-      "  Notebook is ready for submission.\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── Assertion Guard ───────────────────────────────────────────────────────────\n",
     "# Verifies that all required coverage is present before the notebook is submitted.\n",
@@ -3660,7 +3313,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 74,
+   "execution_count": null,
    "id": "8118497b",
    "metadata": {
     "colab": {
@@ -3669,59 +3322,7 @@
     "id": "8118497b",
     "outputId": "61be5869-d969-4693-bfff-bc888cb1aafb"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "=================================================================\n",
-      "  LONG-TERM MEMORY STATE — all accounts\n",
-      "=================================================================\n",
-      "\n",
-      "  acct_1001:\n",
-      "    [preferences] {'reassurance_preference': 'wants_clear_next_steps', 'reply_style': 'concise_status_updates', 'tone': 'empathetic'}\n",
-      "    [history]     {'escalation_flag': True, 'last_category': 'billing', 'last_known_route': 'billing_support', 'recent_escalation_flag': False}\n",
-      "\n",
-      "  acct_1002:\n",
-      "    [preferences] {'escalation_preference': 'prioritize_service_restoration', 'reply_style': 'direct_business_updates', 'tone': 'professional_empathetic'}\n",
-      "    [history]     {'last_category': 'technical', 'last_known_route': 'service_ops', 'recent_escalation_flag': True}\n",
-      "\n",
-      "  acct_1003:\n",
-      "    [preferences] {'reassurance_preference': 'prefers_step_by_step', 'reply_style': 'friendly_guided', 'tone': 'professional_empathetic'}\n",
-      "    [history]     {'last_category': 'account_access', 'last_known_route': 'account_access_support', 'recent_escalation_flag': False}\n",
-      "\n",
-      "  acct_1004:\n",
-      "    [preferences] {'reassurance_preference': 'wants_senior_attention', 'reply_style': 'empathetic_direct', 'tone': 'empathetic'}\n",
-      "    [history]     {'last_category': 'cancellation', 'last_known_route': 'retention_team', 'recent_escalation_flag': True}\n",
-      "\n",
-      "  acct_1005:\n",
-      "    [preferences] {'reassurance_preference': 'prefers_written_confirmation', 'reply_style': 'formal_business_summary', 'tone': 'professional_empathetic'}\n",
-      "    [history]     {'last_category': 'service_request', 'last_known_route': 'service_ops', 'recent_escalation_flag': False}\n",
-      "\n",
-      "  acct_1006:\n",
-      "    [preferences] {'reassurance_preference': 'wants_complaint_logged_explicitly', 'reply_style': 'formal_acknowledgement', 'tone': 'empathetic'}\n",
-      "    [history]     {'last_category': 'complaint', 'last_known_route': 'complaints_team', 'recent_escalation_flag': True}\n",
-      "\n",
-      "  acct_1007:\n",
-      "    [preferences] {'reassurance_preference': 'prefers_quick_fix_guidance', 'reply_style': 'concise_friendly', 'tone': 'professional_empathetic'}\n",
-      "    [history]     {'last_category': 'technical', 'last_known_route': 'technical_support', 'recent_escalation_flag': False}\n",
-      "\n",
-      "  acct_1008:\n",
-      "    [preferences] {'reassurance_preference': 'prefers_security_explanations', 'reply_style': 'step_by_step_guidance', 'tone': 'empathetic'}\n",
-      "    [history]     {'last_category': 'account_access', 'last_known_route': 'account_access_support', 'recent_escalation_flag': False}\n",
-      "\n",
-      "  acct_1009:\n",
-      "    [preferences] {'reassurance_preference': 'wants_escalation_confirmed_in_writing', 'reply_style': 'formal_neutral', 'tone': 'formal_neutral'}\n",
-      "    [history]     {'last_category': 'complaint', 'last_known_route': 'human_specialist', 'recent_escalation_flag': True}\n",
-      "\n",
-      "  Global routing preferences:\n",
-      "  {'prefer_existing_open_ticket_team_when_context_matches': True, 'prefer_human_specialist_for_satisfaction_score_low_with_escalation_history': True, 'prefer_manual_specialist_for_legal_or_regulatory_risk': True}\n",
-      "\n",
-      "  Global tone rules:\n",
-      "  {'avoid_defensive_language': True, 'avoid_overpromising': True, 'default_tone': 'professional_empathetic', 'frustrated_user_tone': 'calm_reassuring', 'legal_threat_tone': 'formal_neutral'}\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "print(\"=\" * 65)\n",
     "print(\"  LONG-TERM MEMORY STATE — all accounts\")\n",
@@ -3819,7 +3420,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 75,
+   "execution_count": null,
    "id": "5dea427d",
    "metadata": {
     "colab": {
@@ -3828,73 +3429,7 @@
     "id": "5dea427d",
     "outputId": "65e7142e-0aad-4dfb-eb0f-c48fd3add99c"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "======================================================================================================================\n",
-      "  AUTOMATED TEST SCORES\n",
-      "======================================================================================================================\n",
-      "TEST                                       FIELD                  EXPECTED               ACTUAL                 STATUS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_01_duplicate_billing                category               billing                billing                ✓ PASS\n",
-      "                                           priority               high                   high                   ✓ PASS\n",
-      "                                           route_to_team          billing_support        billing_support        ✓ PASS\n",
-      "                                           requires_escalation    True                   True                   ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_02_business_outage                  category               technical              technical              ✓ PASS\n",
-      "                                           priority               critical               critical               ✓ PASS\n",
-      "                                           route_to_team          technical_support      technical_support      ✓ PASS\n",
-      "                                           requires_escalation    True                   True                   ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_03_login_access                     category               account_access         account_access         ✓ PASS\n",
-      "                                           priority               medium                 medium                 ✓ PASS\n",
-      "                                           route_to_team          account_access_support account_access_support ✓ PASS\n",
-      "                                           requires_escalation    False                  False                  ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_04_cancellation_threat              category               cancellation           cancellation           ✓ PASS\n",
-      "                                           priority               high                   high                   ✓ PASS\n",
-      "                                           route_to_team          retention_team         retention_team         ✓ PASS\n",
-      "                                           requires_escalation    True                   True                   ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_05_incomplete_ticket                category               service_request        service_request        ✓ PASS\n",
-      "                                           priority               low                    low                    ✓ PASS\n",
-      "                                           route_to_team          service_ops            service_ops            ✓ PASS\n",
-      "                                           requires_escalation    False                  False                  ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_06_app_logout_revision              category               technical              technical              ✓ PASS\n",
-      "                                           priority               medium                 medium                 ✓ PASS\n",
-      "                                           route_to_team          technical_support      technical_support      ✓ PASS\n",
-      "                                           requires_escalation    False                  False                  ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "  test_07_legal_regulatory_threat          category               complaint              complaint              ✓ PASS\n",
-      "                                           priority               critical               critical               ✓ PASS\n",
-      "                                           route_to_team          human_specialist       human_specialist       ✓ PASS\n",
-      "                                           requires_escalation    True                   True                   ✓ PASS\n",
-      "                                           has_final_reply        True                   True                   ✓ PASS\n",
-      "----------------------------------------------------------------------------------------------------------------------\n",
-      "\n",
-      "  OVERALL: 35/35 checks passed  (100%)\n",
-      "\n",
-      "  Per-test breakdown:\n",
-      "    test_01_duplicate_billing                  5/5  [█████]\n",
-      "    test_02_business_outage                    5/5  [█████]\n",
-      "    test_03_login_access                       5/5  [█████]\n",
-      "    test_04_cancellation_threat                5/5  [█████]\n",
-      "    test_05_incomplete_ticket                  5/5  [█████]\n",
-      "    test_06_app_logout_revision                5/5  [█████]\n",
-      "    test_07_legal_regulatory_threat            5/5  [█████]\n",
-      "\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── Automated Test Scorer ────────────────────────────────────────────────────\n",
     "# Maps result variables to their test IDs (order matches test execution order).\n",
@@ -3991,7 +3526,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 76,
+   "execution_count": null,
    "id": "c4678688",
    "metadata": {
     "colab": {
@@ -4000,37 +3535,7 @@
     "id": "c4678688",
     "outputId": "65e6ca18-a171-4bd4-edfe-578a8a7d549a"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "=============================================================================================\n",
-      "  MODEL-AS-JUDGE EVALUATION\n",
-      "=============================================================================================\n",
-      "TEST                                        GROUND   TONE  COMPLETE VERDICT        IN     OUT\n",
-      "---------------------------------------------------------------------------------------------\n",
-      "  test_01_duplicate_billing                      5      5         5 ✓ pass      1,773      67\n",
-      "    → All dimensions scored well, with groundedness fully supported by the KB evidence regarding duplicate charges and refund reviews, tone being empathetic and professional, and completeness addressing the issue with clear next steps and a timeframe.\n",
-      "  test_02_business_outage                        4      4         4 ✓ pass      1,692      48\n",
-      "    → All scores are 4 or 5, indicating a well-grounded, appropriately toned, and complete response.\n",
-      "  test_03_login_access                           4      5         4 ✓ pass      1,827     117\n",
-      "    → The groundedness score is 4 because the agent's claims are mostly supported by the KB evidence, but there is a minor generic phrase about the verification process that isn't directly backed by the evidence. The tone is a 5 as it empathetically acknowledges the customer's frustration and maintains professionalism. The completeness score is 4 because the agent addresses the core issue and names the next step of escalating the case, but does not specify the team that will handle it.\n",
-      "  test_04_cancellation_threat                    5      5         4 ✓ pass      1,734      60\n",
-      "    → All scores are 4 or 5, with groundedness and tone fully meeting the criteria, while completeness is slightly lacking in specifying the exact nature of the escalation process.\n",
-      "  test_05_incomplete_ticket                      4      4         4 ✓ pass      1,613      48\n",
-      "    → All dimensions scored 4 or higher, with groundedness reflecting mostly relevant questions and tone being professional and appropriate.\n",
-      "  test_06_app_logout_revision                    4      5         4 ✓ pass      1,802     107\n",
-      "    → The groundedness score is 4 because the agent's request for device model and OS version is relevant, but it could have included a follow-up on whether the issue started after an update or password change. The tone is a perfect 5, as it acknowledges the customer's frustration and maintains a professional demeanor. The completeness score is 4, as it clearly states the next steps and timeframe for follow-up.\n",
-      "  test_07_legal_regulatory_threat                4      4         4 ✓ pass      1,715      79\n",
-      "    → The agent's reply is mostly grounded in the KB evidence, maintains a professional tone, and addresses the core issue with a clear next step.\n",
-      "---------------------------------------------------------------------------------------------\n",
-      "\n",
-      "  JUDGE SUMMARY: pass=7  partial=0  fail=0\n",
-      "  📊 Per-test token metrics saved → run the Cost Analysis cell to view totals\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── Model-as-Judge Evaluator ──────────────────────────────────────────────────\n",
     "# Uses base_llm (gpt-4o-mini) to grade each final reply on 3 rubric dimensions.\n",
@@ -4268,7 +3773,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 94,
+   "execution_count": null,
    "id": "e272ba2d",
    "metadata": {
     "id": "e272ba2d"
@@ -4404,50 +3909,22 @@
     "    return bool(snapshot.tasks)\n",
     "\n",
     "\n",
-    "def _choose_option(title: str, options: dict, prompt: str = \"\") -> str:\n",
-    "    \"\"\"Show a clear numeric menu and return only a valid numeric option.\"\"\"\n",
-    "    valid = list(options.keys())\n",
-    "    menu_lines = [title] + [f\"  {k} - {v}\" for k, v in options.items()]\n",
-    "    menu_text = \"\\n\".join(menu_lines)\n",
-    "    if not prompt:\n",
-    "        prompt = f\"{menu_text}\\nEnter option number: \"\n",
-    "    while True:\n",
-    "        choice = input(prompt).strip()\n",
-    "        if choice in options:\n",
-    "            return choice\n",
-    "        print(f\"Invalid choice. Allowed: {', '.join(valid)}\")\n",
-    "        print(menu_text)\n",
-    "\n",
-    "\n",
     "def _ask_reviewer() -> str:\n",
-    "    \"\"\"Prompt reviewer with numeric choices and return a normalised decision string.\"\"\"\n",
-    "    choice = _choose_option(\n",
-    "        title=\"Manager Decision (numbers only)\",\n",
-    "        options={\n",
-    "            \"1\": \"Approve\",\n",
-    "            \"2\": \"Revise (text feedback required next)\",\n",
-    "            \"3\": \"Escalate manually\",\n",
-    "        },\n",
-    "    )\n",
-    "\n",
-    "    if choice == \"1\":\n",
-    "        return \"approve\"\n",
-    "    if choice == \"2\":\n",
-    "        feedback = input(\"Type revision feedback text (required): \").strip()\n",
-    "        return f\"revise: {feedback}\"\n",
-    "    return \"escalate_manually\"\n",
+    "    \"\"\"Prompt the reviewer and return a normalised decision string.\"\"\"\n",
+    "    decision = input(\"Manager Decision (approve / revise / escalate_manually): \").strip().lower()\n",
+    "    if decision not in ['approve', 'revise', 'escalate_manually']:\n",
+    "        print(\"Invalid decision. Defaulting to 'approve'.\")\n",
+    "        decision = \"approve\"\n",
+    "    if decision == \"revise\":\n",
+    "        feedback = input(\"Feedback for Agent revision: \").strip()\n",
+    "        decision = f\"revise: {feedback}\"\n",
+    "    return decision\n",
     "\n",
     "\n",
     "def _ask_next_test() -> bool:\n",
-    "    \"\"\"Ask whether to run another test using numeric choices.\"\"\"\n",
-    "    choice = _choose_option(\n",
-    "        title=\"Run next test?\",\n",
-    "        options={\n",
-    "            \"1\": \"Yes\",\n",
-    "            \"2\": \"No\",\n",
-    "        },\n",
-    "    )\n",
-    "    if choice == \"1\":\n",
+    "    \"\"\"Ask whether to run another test and return True only for continue answers.\"\"\"\n",
+    "    decision = input(\"\\nRun next test? (y/n): \").strip().lower()\n",
+    "    if decision in [\"y\", \"yes\", \"next\", \"continue\"]:\n",
     "        print(\"Ready for the next test.\")\n",
     "        return True\n",
     "    print(\"Good bye.\")\n",
@@ -4457,28 +3934,16 @@
     "def interactive_session():\n",
     "    print(\"==================================================\")\n",
     "    print(\"🤖 Welcome to the Cortex Support Triage Terminal\")\n",
-    "    print(\"Numbers only for menus.\")\n",
-    "    print(\"Text is required only for:\")\n",
-    "    print(\"  - Customer Support Request\")\n",
-    "    print(\"  - Revision Feedback (only if you choose Revise)\")\n",
+    "    print(\"Type 'quit' or 'exit' to stop.\")\n",
     "    print(\"==================================================\\n\")\n",
     "\n",
     "    while True:\n",
-    "        menu_choice = _choose_option(\n",
-    "            title=\"Main Menu\",\n",
-    "            options={\n",
-    "                \"1\": \"Run a support request\",\n",
-    "                \"2\": \"Exit\",\n",
-    "            },\n",
-    "        )\n",
-    "\n",
-    "        if menu_choice == \"2\":\n",
+    "        user_msg = input(\"\\n👤 Customer Support Request: \")\n",
+    "        if user_msg.lower() in ['quit', 'exit']:\n",
     "            print(\"Good bye.\")\n",
     "            break\n",
-    "\n",
-    "        user_msg = input(\"\\nType Customer Support Request text (required): \")\n",
     "        if not user_msg.strip():\n",
-    "            print(\"Request cannot be empty.\")\n",
+    "            print(\"Please enter a request, or type 'quit'/'exit' to stop.\")\n",
     "            continue\n",
     "\n",
     "        print(\"\\n⏳ System is processing (Agents are thinking)...\")\n",
@@ -4565,7 +4030,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 96,
+   "execution_count": null,
    "id": "30b47d74",
    "metadata": {
     "colab": {
@@ -4575,988 +4040,14 @@
     "id": "30b47d74",
     "outputId": "38504f17-a1fd-4e90-87ef-1837645ffd3a"
    },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "==================================================\n",
-      "🤖 Welcome to the Cortex Support Triage Terminal\n",
-      "Numbers only for menus.\n",
-      "Text is required only for:\n",
-      "  - Customer Support Request\n",
-      "  - Revision Feedback (only if you choose Revise)\n",
-      "==================================================\n",
-      "\n",
-      "\n",
-      "⏳ System is processing (Agents are thinking)...\n",
-      "  [load_memory] account_id=acct_1008  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=account_access  priority=high  sentiment=frustrated  escalation=True  account_id=acct_1008\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=False  priority_signal=medium  kb_category=account_access\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'account_access', 'priority': 'medium'}  → route_to_team=account_access_support\n",
-      "  [resolve] route=account_access_support  action=verify_identity_and_restore_safe_access\n",
-      "  [draft] tone=empathetic  length=743 chars\n",
-      "  [route] draft → finalize  (auto-approve: priority=medium, category=account_access, escalation=False)\n",
-      "  [finalize] Memory written back for acct_1008.\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "*🧭 Routing Reason: reviewer not required — low-risk auto-finalize (priority=medium, category=account_access, requires_escalation=False).*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✅ Final Customer Response (No Review Needed)"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "**Sent to Customer:**\n",
-       "\n",
-       "I completely understand your frustration and sincerely apologize for the inconvenience you're experiencing with your account access. \n",
-       "\n",
-       "It appears that after resetting your password, you are still unable to log in, and the verification code step is failing. This can happen if the new password was not accepted or if the reset link was not used successfully. \n",
-       "\n",
-       "To address this, I will escalate your case to our support team, who will verify your identity and ensure that your account is restored for safe access. They will check the acceptance of your new password and the status of the reset link. \n",
-       "\n",
-       "You can expect to hear back from our support team within 2 business days. Thank you for your patience as we work to resolve this issue for you."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 💾 Written to Database (Long-Term Memory)"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Preferences:** `{'reassurance_preference': 'prefers_security_explanations', 'reply_style': 'step_by_step_guidance', 'tone': 'empathetic'}`\n",
-       "- **History:** `{'last_category': 'account_access', 'last_known_route': 'account_access_support', 'recent_escalation_flag': False}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧑‍⚖️ Model-as-Judge Evaluation"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "| Dimension | Score | Rating |\n",
-       "|---|:---:|---|\n",
-       "| 🎯 Groundedness | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "| 🎭 Tone | 5/5 | ⭐⭐⭐⭐⭐ |\n",
-       "| ✅ Completeness | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "\n",
-       "**Verdict: ✅ **pass****\n",
-       "\n",
-       "*The groundedness score is 4 because the agent made one minor generic statement about the password acceptance and reset link, but the rest of the claims are well-supported by the KB evidence. The tone is a 5 as it empathetically acknowledges the customer's frustration and maintains professionalism. The completeness score is 4 since it addresses the core issue and names the next steps, including the timeframe for follow-up.*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Ready for the next test.\n",
-      "\n",
-      "⏳ System is processing (Agents are thinking)...\n",
-      "  [load_memory] account_id=acct_1004  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['escalation_flag', 'last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=cancellation  priority=high  sentiment=angry  escalation=True  account_id=acct_1004\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=high  kb_category=cancellation\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'cancellation', 'priority': 'high'}  → route_to_team=retention_team\n",
-      "  [resolve] route=retention_team  action=acknowledge_churn_risk_and_offer_retention_review\n",
-      "  [draft] tone=empathetic  length=620 chars\n",
-      "  [route] draft → review  (reason: requires_escalation=True)\n",
-      "  [review] HITL interrupt — waiting for human decision...\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧠 System Analysis"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Category:** `cancellation / request to cancel service`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Priority:** `high`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Extracted Entities:** `{'account_id': 'acct_1004'}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **History Flag:** `Yes`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🏢 Internal Routing & Notes"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Assigned Team:** `retention_team`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Recommended Action:** `acknowledge_churn_risk_and_offer_retention_review`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Internal Notes:** _User is expressing frustration and has threatened cancellation. They have a history of dissatisfaction and have requested senior attention. Immediate escalation to the retention team is necessary to address their concerns and explore retention options._"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✍️ Generated Draft"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "> I completely understand your frustration and sincerely apologise for the inconvenience you've experienced. It’s clear that you are feeling very dissatisfied with our service, and I want to ensure your concerns are addressed promptly.\n",
-       "\n",
-       "I will escalate your case to our Customer Success team, who will review your situation and explore options to retain your account. They are equipped to provide the senior attention you’ve requested and will work to resolve your issues as quickly as possible.\n",
-       "\n",
-       "You can expect to hear back from them within 1 business day. Thank you for your patience as we work to address your concerns."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🕵️ Reviewer Intervention Required"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "⏳ Resuming workflow with decision: 'revise: add thate we wil fix it in 1 day'...\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  [review] Decision: REVISE —  add thate we wil fix it in 1 day...\n",
-      "  [revise] Revised draft: I completely understand your frustration and sincerely apologise for the inconve...\n",
-      "  [review] HITL interrupt — waiting for human decision...\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧠 System Analysis"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Category:** `cancellation / request to cancel service`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Priority:** `high`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Extracted Entities:** `{'account_id': 'acct_1004'}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **History Flag:** `Yes`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🏢 Internal Routing & Notes"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Assigned Team:** `retention_team`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Recommended Action:** `acknowledge_churn_risk_and_offer_retention_review`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Internal Notes:** _User is expressing frustration and has threatened cancellation. They have a history of dissatisfaction and have requested senior attention. Immediate escalation to the retention team is necessary to address their concerns and explore retention options._"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✍️ Generated Draft"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "> I completely understand your frustration and sincerely apologise for the inconvenience you've experienced. I want to ensure your concerns are addressed promptly.\n",
-       "\n",
-       "I will escalate your case to our Customer Success team, who will review your situation and work to resolve your issues within 1 business day. They are equipped to provide the senior attention you’ve requested.\n",
-       "\n",
-       "Thank you for your patience as we work to address your concerns."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🕵️ Reviewer Intervention Required"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "⏳ Resuming workflow with decision: 'approve'...\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  [review] Decision: APPROVE\n",
-      "  [finalize] Memory written back for acct_1004.\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "*🧭 Routing Reason: reviewer required (HITL) — requires_escalation=True, priority=high, category=cancellation.*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✅ Final Customer Response"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "**Sent to Customer:**\n",
-       "\n",
-       "I completely understand your frustration and sincerely apologise for the inconvenience you've experienced. I want to ensure your concerns are addressed promptly.\n",
-       "\n",
-       "I will escalate your case to our Customer Success team, who will review your situation and work to resolve your issues within 1 business day. They are equipped to provide the senior attention you’ve requested.\n",
-       "\n",
-       "Thank you for your patience as we work to address your concerns."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 💾 Written to Database (Long-Term Memory)"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Preferences:** `{'reassurance_preference': 'wants_senior_attention', 'reply_style': 'empathetic_direct', 'tone': 'empathetic'}`\n",
-       "- **History:** `{'escalation_flag': True, 'last_category': 'cancellation', 'last_known_route': 'retention_team', 'recent_escalation_flag': True}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧑‍⚖️ Model-as-Judge Evaluation"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "| Dimension | Score | Rating |\n",
-       "|---|:---:|---|\n",
-       "| 🎯 Groundedness | 5/5 | ⭐⭐⭐⭐⭐ |\n",
-       "| 🎭 Tone | 5/5 | ⭐⭐⭐⭐⭐ |\n",
-       "| ✅ Completeness | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "\n",
-       "**Verdict: ✅ **pass****\n",
-       "\n",
-       "*All scores are 4 or 5, with groundedness and tone fully aligned with the customer's emotional state and the resolution process, though the timeframe could be more specific for completeness.*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Ready for the next test.\n",
-      "Invalid choice. Allowed: 1, 2\n",
-      "Main Menu\n",
-      "  1 - Run a support request\n",
-      "  2 - Exit\n",
-      "\n",
-      "⏳ System is processing (Agents are thinking)...\n",
-      "  [load_memory] account_id=acct_1009  prefs=['reassurance_preference', 'reply_style', 'tone']  history=['last_category', 'last_known_route', 'recent_escalation_flag']\n",
-      "  [triage] category=complaint  priority=critical  sentiment=angry  escalation=True  account_id=acct_1009\n",
-      "  [route] → retrieve\n",
-      "  [retrieve] kb_hits=4  account_found=True  escalation=True  priority_signal=critical  kb_category=billing\n",
-      "  [resolve] route_policy_lookup called with args={'category': 'complaint', 'priority': 'critical'}  → route_to_team=human_specialist\n",
-      "  [resolve] route=human_specialist  action=escalate_sensitive_complaint_for_manual_handling\n",
-      "  [draft] tone=formal_neutral  length=609 chars\n",
-      "  [route] draft → review  (reason: requires_escalation=True)\n",
-      "  [review] HITL interrupt — waiting for human decision...\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧠 System Analysis"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Category:** `complaint / billing dispute`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Priority:** `critical`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Extracted Entities:** `{'account_id': 'acct_1009'}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **History Flag:** `Yes`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🏢 Internal Routing & Notes"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Assigned Team:** `human_specialist`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Recommended Action:** `escalate_sensitive_complaint_for_manual_handling`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Internal Notes:** _Customer is experiencing a critical billing dispute and has threatened to report to a consumer regulator if not resolved today. Previous tickets indicate ongoing issues with this account. Immediate escalation to a human specialist is necessary for proper handling._"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✍️ Generated Draft"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "> I understand the urgency of your situation and want to assure you this is our top priority. You have been waiting weeks for a resolution on your billing dispute, and I acknowledge your frustration regarding the lack of communication.\n",
-       "\n",
-       "To address your concern, I will escalate your case to our Senior Support team for manual handling. They will review the details of your billing dispute and ensure that it is prioritized for resolution.\n",
-       "\n",
-       "You can expect to hear back from our Senior Support team as quickly as possible, typically within 2–4 hours. Thank you for your patience as we work to resolve this matter."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🕵️ Reviewer Intervention Required"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "\n",
-      "⏳ Resuming workflow with decision: 'escalate_manually'...\n",
-      "  [review] HITL interrupt — waiting for human decision...\n",
-      "  [review] Decision: ESCALATE MANUALLY\n",
-      "  [manual_escalation] Case escalated to human_specialist.\n"
-     ]
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "*🧭 Routing Reason: reviewer required (HITL) — requires_escalation=True, priority=critical, category=complaint.*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### ✅ Final Customer Response"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "**Sent to Customer:**\n",
-       "\n",
-       "Your case has been escalated for manual handling by a support specialist. We will review the details and follow up through your preferred contact channel."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 💾 Written to Database (Long-Term Memory)"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "- **Preferences:** `{'reassurance_preference': 'wants_escalation_confirmed_in_writing', 'reply_style': 'formal_neutral', 'tone': 'formal_neutral'}`\n",
-       "- **History:** `{'last_category': 'complaint', 'last_known_route': 'human_specialist', 'recent_escalation_flag': True}`"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### 🧑‍⚖️ Model-as-Judge Evaluation"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "| Dimension | Score | Rating |\n",
-       "|---|:---:|---|\n",
-       "| 🎯 Groundedness | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "| 🎭 Tone | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "| ✅ Completeness | 4/5 | ⭐⭐⭐⭐☆ |\n",
-       "\n",
-       "**Verdict: ✅ **pass****\n",
-       "\n",
-       "*All scores are 4 or higher, indicating a well-grounded, appropriately toned, and complete response.*"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "---"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Invalid choice. Allowed: 1, 2\n",
-      "Run next test?\n",
-      "  1 - Yes\n",
-      "  2 - No\n",
-      "Invalid choice. Allowed: 1, 2\n",
-      "Run next test?\n",
-      "  1 - Yes\n",
-      "  2 - No\n",
-      "Invalid choice. Allowed: 1, 2\n",
-      "Run next test?\n",
-      "  1 - Yes\n",
-      "  2 - No\n",
-      "Invalid choice. Allowed: 1, 2\n",
-      "Run next test?\n",
-      "  1 - Yes\n",
-      "  2 - No\n",
-      "Invalid choice. Allowed: 1, 2\n",
-      "Run next test?\n",
-      "  1 - Yes\n",
-      "  2 - No\n",
-      "Good bye.\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "interactive_session()"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 91,
+   "execution_count": null,
    "id": "07b6d886",
    "metadata": {
     "colab": {
@@ -5566,86 +4057,7 @@
     "id": "07b6d886",
     "outputId": "1ad5bfa8-8de9-4f21-85c7-490314d9aead"
    },
-   "outputs": [
-    {
-     "data": {
-      "text/markdown": [
-       "## 📊 Cost Analysis\n",
-       "\n",
-       "### Table 1 — Per-case Breakdown\n",
-       "\n",
-       "| # | Test Case | WF Calls | WF In tok | WF Out tok | WF Cost (USD) | Judge In tok | Judge Out tok | Judge Cost (USD) | **Total Cost (USD)** |\n",
-       "|---|-----------|----------|-----------|------------|---------------|-------------|---------------|-----------------|----------------------|\n",
-       "| 1 | `test_01_duplicate_billing` | 4 | 3,578 | 243 | \\$0.00068 | 1,773 | 67 | \\$0.00031 | **\\$0.00099** |\n",
-       "| 2 | `test_02_business_outage` | 4 | 3,493 | 242 | \\$0.00067 | 1,692 | 48 | \\$0.00028 | **\\$0.00095** |\n",
-       "| 3 | `test_03_login_access` | 4 | 3,644 | 293 | \\$0.00072 | 1,827 | 117 | \\$0.00034 | **\\$0.00107** |\n",
-       "| 4 | `test_04_cancellation_threat` | 5 | 3,896 | 326 | \\$0.00078 | 1,734 | 60 | \\$0.00030 | **\\$0.00108** |\n",
-       "| 5 | `test_05_incomplete_ticket` | 1 | 999 | 44 | \\$0.00018 | 1,613 | 48 | \\$0.00027 | **\\$0.00045** |\n",
-       "| 6 | `test_06_app_logout_revision` | 4 | 3,685 | 253 | \\$0.00070 | 1,802 | 107 | \\$0.00033 | **\\$0.00104** |\n",
-       "| 7 | `test_07_legal_regulatory_threat` | 4 | 3,871 | 264 | \\$0.00074 | 1,715 | 79 | \\$0.00030 | **\\$0.00104** |\n",
-       "| | **7-test TOTAL** | | | | | | | | **\\$0.00661** |\n",
-       "| | | | | | | | | | |\n",
-       "| — | HITL Showcase A *(showcase)* | 4 | 3,556 | 224 | \\$0.00067 | — | — | — | **\\$0.00067** |\n",
-       "| — | HITL Showcase B *(showcase)* | 4 | 3,630 | 285 | \\$0.00072 | — | — | — | **\\$0.00072** |"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### Table 2 — Averages per Ticket (7-test basis)\n",
-       "\n",
-       "| Component | Calls | Input tokens | Output tokens | Cost (USD) |\n",
-       "|-----------|------:|-------------:|--------------:|-----------:|\n",
-       "| Workflow  | 3.7 | 3,309 | 238 | \\$0.00064 |\n",
-       "| Judge     | 1.0 | 1,737 | 75 | \\$0.00031 |\n",
-       "| **TOTAL** | 4.7 | 5,046 | 313 | **\\$0.00094** |"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "### Table 3 — Extrapolated Cost for 100 Tickets\n",
-       "\n",
-       "| Component | Calls | Input tokens | Output tokens | Cost (USD) |\n",
-       "|-----------|------:|-------------:|--------------:|-----------:|\n",
-       "| Workflow  | 371 | 330,943 | 23,786 | \\$0.0639 |\n",
-       "| Judge     | 100 | 173,657 | 7,514 | \\$0.0306 |\n",
-       "| **TOTAL** | 471 | 504,600 | 31,300 | **\\$0.0945** |"
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    },
-    {
-     "data": {
-      "text/markdown": [
-       "> **Pricing assumptions (gpt-4o-mini, non-cached input):**  \n",
-       "> Input: \\$0.15 / 1M tokens · Output: \\$0.60 / 1M tokens  \n",
-       "> HITL showcase rows are excluded from averages and extrapolation."
-      ],
-      "text/plain": [
-       "<IPython.core.display.Markdown object>"
-      ]
-     },
-     "metadata": {},
-     "output_type": "display_data"
-    }
-   ],
+   "outputs": [],
    "source": [
     "# ── Cost Analysis — reads from SQLite, no LLM calls ──────────────────────────\n",
     "from IPython.display import display, Markdown\n",
