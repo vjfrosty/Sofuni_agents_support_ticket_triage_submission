@@ -1,12 +1,19 @@
-# Cortex Support Triage — Intelligent Multi-Agent Workflow Engine
+# Individual Course Project
+### SofUni · AI Agents and Workflows for Developers · May 2026
+
+**Author:** Yasen Ivanov
+
+## Support Ticket Triage — Multi-Agent Workflow
 
 A production-inspired AI support triage system built on **LangGraph**, **LangChain**, and **OpenAI gpt-4o-mini**.
 It demonstrates how autonomous agents, deterministic business policies, and Human-in-the-Loop (HITL)
 supervision can be composed into a reliable, auditable, and personalisable support solution.
 
-**Notebook:** `support_ticket_triage.ipynb`  
+**Notebook:** `support_ticket_triage_v1.ipynb`  
 **Data:** `project_data.json` — loaded at runtime from GitHub (KB articles · account contexts · routing rules · test cases)  
 **Persistence:** Two SQLite databases — `workflow_state.sqlite` (graph checkpoints) · `memory_store.sqlite` (long-term memory)
+
+Includes **10 unit tests** (isolated `:memory:` SQLite database for memory functions + all 5 tools) and **7 end-to-end integration tests** validating HITL paths and workflow correctness.
 
 ---
 
@@ -18,12 +25,32 @@ supervision can be composed into a reliable, auditable, and personalisable suppo
 | **API-forced tool call** | `routing_llm.bind_tools([route_policy_lookup], tool_choice="required")` — the model *must* call the routing tool; enforced at the OpenAI API level, not just a prompt hint |
 | **3-layer memory** | Short-term (tiktoken-trimmed messages) · Long-term (namespaced SQLite) · RAG (FAISS over 17 KB articles) |
 | **Model-as-Judge** | After the scorer, `gpt-4o-mini` grades each reply on groundedness · tone · completeness (1–5) with a pass/partial/fail verdict |
-| **Unit tests** | 10 isolated `assert`-based tests on memory functions + all 5 tools — zero side effects |
+| **Unit tests** | 10 isolated `assert`-based tests on memory functions + all 5 tools — zero side effects on production DB |
+| **Interactive Demo** | Live HITL test harness — full chat loop with rich display helpers for end-to-end scenario exploration |
+| **Cost Tracking** | OpenAI callback integration — per-workflow cost allocation (input tokens · output tokens · total spend · model breakdown) |
 | **Guardrails** | PII redaction (email, phone, SSN, card) + forbidden-topic blocking before graph invocation |
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture at a Glance
+
+| Layer | Component | Detail |
+|---|---|---|
+| **Framework** | LangGraph `StateGraph` | SQLite checkpointer, cyclical graph, resumable from interrupts |
+| **LLM Stack** | `gpt-4o-mini` (OpenAI) | `triage_llm` · `plan_llm` · `routing_llm` · `base_llm` |
+| **Nodes** | 10 agent nodes | Memory Loader · Triage · Clarify · Retrieval · Resolution · Draft · Review (HITL, conditional) · Revise · Finalize · Manual Escalation |
+| **Tools** | 5 deterministic tools | `search_kb` · `lookup_account_context` · `detect_escalation_risk` · `priority_score` · `route_policy_lookup` |
+| **Memory** | 3 layers | Short-term (messages + tiktoken trim) · Long-term (SQLite namespaced) · RAG (FAISS / 17 KB articles) |
+| **API-Forced Tool Call** | `routing_llm.bind_tools` | Enforced at OpenAI API level with `tool_choice="required"` on `route_policy_lookup` |
+| **Conditional HITL** | `after_draft_route()` | Routes high-risk tickets (critical/high priority, escalation flags, churn/complaint/unknown) to review; low-risk skip to finalize |
+| **Evaluation** | Scorer + Model-as-Judge | Deterministic checks + `gpt-4o-mini` rubric (groundedness · tone · completeness) |
+| **Tests** | 7 end-to-end + 10 unit | HITL paths: approve · revise · escalate_manually · auto-finalize · clarify; isolated `:memory:` DB for units |
+| **Interactive Demo** | Live test harness | Full HITL chat loop with rich display helpers for end-to-end scenario exploration |
+| **Cost Tracking** | OpenAI callback | Per-workflow cost allocation: input tokens · output tokens · total spend · model breakdown |
+
+---
+
+## 🔄 Workflow Architecture
 
 ```
 user_request
@@ -50,14 +77,25 @@ user_request
 [draft_node]  ← gpt-4o-mini, tone from long-term memory
      │
      ▼
-[review_node]  ◄──────── HITL interrupt ──────────► human decision
-     │                                                    │
-     ├── approve ──────────────────────────────► [finalize_node]
-     │                                                    │
-     ├── revise: <feedback> ──► [revise_node] ──► back to review
+[after_draft_route]  ← Conditional gate (high-risk → HITL, low-risk → auto-finalize)
      │
-     └── escalate_manually ──► [manual_escalation_node] ──► END
+     ├─ HIGH RISK ──► [review_node]  ◄────── HITL interrupt ────────► human decision
+     │                    │                                                 │
+     │                    ├── approve ─────────────────────────► [finalize_node]
+     │                    │                                                 │
+     │                    ├── revise: <feedback> ──► [revise_node] ──► back to review
+     │                    │
+     │                    └── escalate_manually ──► [manual_escalation_node] ──► END
+     │
+     └─ LOW RISK ──► [finalize_node] ──► END
 ```
+
+**Key Routing Decision:** After `draft_node`, tickets are evaluated for:
+- High priority (critical/high)
+- Escalation risk flag
+- Risky categories (cancellation, complaint, unknown)
+→ HIGH RISK = stop at `review_node` for human approval  
+→ LOW RISK = skip review, proceed to `finalize_node`
 
 ---
 
@@ -133,67 +171,53 @@ If the response contains no `tool_calls` (model defied the API), the node falls 
 
 ---
 
-## 🧪 Test Suite
+## 🧪 Test Suite & Validation
 
-### 7 End-to-End Tests
+### 10 Unit Tests (Isolated `:memory:` SQLite Database)
+- **Mechanism:** Each unit test uses `init_memory_db(":memory:")` — zero side effects on production `memory_store.sqlite`
+- **Coverage:** Memory functions (save/load/round-trip) + all 5 tools (search_kb, lookup_account_context, detect_escalation_risk, priority_score, route_policy_lookup)
+- **Assertions:** 10 `assert` statements validating return types, non-empty dicts, correct routing, priority escalation keywords
+
+### 7 End-to-End Integration Tests
 
 | # | Scenario | Account | HITL Decision | Key Assertion |
 |---|---|---|---|---|
-| 1 | Duplicate billing charge | acct_1001 | approve | `category=billing`, `route=billing_support` |
-| 2 | Business office outage | acct_1002 | escalate_manually | `priority=critical`, `route=technical_support` |
-| 3 | Login / MFA failure | acct_1008 | approve | `category=account_access`, `route=account_access_support` |
-| 4 | Cancellation threat | acct_1004 | revise | `category=cancellation`, `route=retention_team`, memory write-back |
-| 5 | Vague / incomplete ticket | — | clarify (no HITL) | `missing_info ≥ 2` → `clarify_node` |
-| 6 | App logout revision loop | acct_1007 | revise | revision + message history contains both drafts |
-| 7 | Legal / regulatory threat | acct_1009 | escalate_manually | `priority=critical`, `route=human_specialist` |
+| 1 | Duplicate billing charge | acct_1001 | approve | `category=billing`, `route=billing_support`, stays in HITL |
+| 2 | Business office outage | acct_1002 | escalate_manually | `priority=critical`, `route=technical_support`, requires escalation |
+| 3 | Login / MFA failure | acct_1008 | auto-finalize | `category=account_access`, `route=account_access_support`, skips HITL |
+| 4 | Cancellation threat | acct_1004 | revise | `category=cancellation`, `route=retention_team`, revision loop + memory write-back |
+| 5 | Vague / incomplete ticket | — | clarify (no HITL) | `missing_info ≥ 2` → `clarify_node` returns clarification request |
+| 6 | App logout issue (revision loop) | acct_1007 | revise → approve | Multiple revisions + message history contains both drafts |
+| 7 | Legal / regulatory threat | acct_1009 | escalate_manually | `priority=critical`, `route=human_specialist`, compliance escalation |
 
-### HITL Showcase (2 isolated sub-runs)
-- **Sub-run A**: approve path — asserts `human_approved=True`, `status=approved`
-- **Sub-run B**: revise → re-review → approve loop — asserts `status ∈ {approved, revised}`
-
-### 10 Unit Tests (Cell 41)
-Isolated `assert`-based tests using `conn = init_memory_db(":memory:")` — no side effects on `MEMORY_CONN`:
-
-| # | Test |
-|---|---|
-| 1 | `save_memory` + `load_memory` round-trip |
-| 2 | `load_memory` on unknown namespace → `{}` |
-| 3 | `save_memory` upsert — second write wins |
-| 4 | `search_kb` returns `list` with `text` key |
-| 5 | `lookup_account_context("acct_1001")` returns non-empty dict |
-| 6–7 | `detect_escalation_risk` — True (cancel) + False (neutral) |
-| 8–9 | `priority_score` — `critical` (outage) + `medium` (login) |
-| 10 | `route_policy_lookup` returns dict with `route_to_team` key |
-
----
-
-## 📊 Evaluation
+### HITL Showcase (2 Isolated Sub-Runs)
+- **Showcase A**: Approve path — asserts `human_approved=True`, `status=approved`
+- **Showcase B**: Revise loop — asserts `status ∈ {approved, revised}` after human revision
 
 ### Automated Scorer (Cell 64)
-Checks each test result against expected values from `project_data.json`:
+Deterministic checks on each test result:
 - `category` · `priority` · `route_to_team` · `requires_escalation` · `has_final_reply`
-- Reports per-test breakdown with `✓/✗/–` symbols and an overall `n/N checks passed (%)` summary.
+- Per-test breakdown with `✓/✗/–` symbols + overall `n/N checks passed (%)` summary
 
 ### Model-as-Judge (Cell 65)
-After the deterministic scorer, `gpt-4o-mini` re-evaluates each final reply:
+`gpt-4o-mini` re-evaluates each final reply on:
 
 | Dimension | Scale | Description |
 |---|---|---|
-| **groundedness** | 1–5 | Does the reply avoid claims not supported by the ticket or KB? |
-| **tone** | 1–5 | Is the tone appropriate for the customer's sentiment and priority? |
+| **groundedness** | 1–5 | Does reply avoid claims unsupported by ticket or KB? |
+| **tone** | 1–5 | Is tone appropriate for customer sentiment and priority? |
 | **completeness** | 1–5 | Does it address the core issue and explain next steps? |
 | **verdict** | pass/partial/fail | `pass` = all ≥ 4 · `partial` = any = 3 · `fail` = any ≤ 2 |
 
-Results are printed as a table with justifications. Errors are caught and logged as `ERR` — never crash the cell.
-
 ---
 
-## 🛡️ Guardrails
+## 🛡️ Guardrails & Safety
 
 Applied inside `execute_workflow()` before graph invocation:
-- **PII redaction** — regex patterns for email, phone (US), SSN, credit card → `[EMAIL]`, `[PHONE]`, `[SSN]`, `[CARD]`
-- **Forbidden topics** — blocks "guaranteed refund", "100% money back", "sue", "class action", "illegal", "fraud lawsuit", "criminal charges", "sex"
-- Blocked requests return `status=blocked_by_guardrail` without invoking the graph.
+- **PII Redaction** — Regex patterns for email, phone (US/intl), SSN, credit card, account numbers → `[EMAIL]`, `[PHONE]`, `[SSN]`, `[CARD]`
+- **Forbidden Topics** — Blocks risky promises: "guaranteed refund", "100% money back", "sue", "class action", "illegal", "fraud lawsuit", "criminal charges", "sex", etc.
+- **Enforcement** — Blocked requests return `status=blocked_by_guardrail` + reason without invoking the graph
+- **Logging** — All guardrail violations logged for audit trail
 
 ---
 
@@ -203,43 +227,57 @@ Applied inside `execute_workflow()` before graph invocation:
 ```
 langchain>=0.3.16
 langchain-openai>=0.2.11
-langchain-community
+langchain-community>=0.3.16
 langgraph>=0.2.76
-faiss-cpu
-tiktoken
-pydantic>=2.0
+faiss-cpu==1.8.0
+tiktoken>=0.7.0
+pydantic>=2.12.3
+requests>=2.32.4
+numpy>=1.26.4
 ```
 
-### Quick Run (Google Colab or local Jupyter)
-1. Add your `OPENAI_API_KEY` to Colab Secrets (key icon in sidebar) **or** set it as an environment variable:
+### Quick Run (Google Colab or Local Jupyter)
+1. Add your `OPENAI_API_KEY` to Colab Secrets (key icon in sidebar) **or** set as environment variable:
    ```bash
    export OPENAI_API_KEY="sk-..."
    ```
-2. Open `support_ticket_triage.ipynb`.
-3. **Run cells top-to-bottom** — cells 2–38 are one-time setup.
-4. After setup, run any test cell (43–61) or the full run below.
-5. Start the interactive demo: run cell 69 (`interactive_session()`).
+2. Open `support_ticket_triage_v1.ipynb`
+3. **Run cells top-to-bottom** — cells 4–38 are one-time setup (Cell 3 Dependencies may trigger Colab restart)
+4. After setup, run any test cell (43–61) independently
+5. Start interactive demo: run cell 69 (`interactive_session()`)
 
-### Full Test Run (batch)
+### Full Test Run (Batch Mode)
 ```
-Run Cell 3  → install dependencies (Colab: may trigger restart — rerun from top)
-Run Cell 6  → set API key
-Run Cells 8–38 → all setup + graph compile
-Run Cell 43 → Test 1
-Run Cell 45 → Test 2
-...
-Run Cell 64 → automated scorer
-Run Cell 65 → model-as-judge
+Run Cell 3  → Install dependencies (may restart Colab — rerun from top)
+Run Cell 6  → Set API key
+Run Cells 8–38 → Setup + graph compile + memory init
+Run Cells 43–61 → Each end-to-end test independently
+Run Cell 64 → Automated scorer
+Run Cell 65 → Model-as-Judge evaluation
 ```
+
+### Notebook Cell Structure (53 Cells Total)
+
+| Section | Cells | Purpose |
+|---|---|---|
+| **Intro & Navigation** | 1–2 | Methodology overview + Table of Contents with jump links |
+| **Dependencies & Runtime** | 3–12 | Dependency install, API key, imports, data load, FAISS disk caching, OpenMP guard |
+| **Memory & Guardrails** | 14–20 | Memory DB init, logging, PII redaction, forbidden topic blocking |
+| **Core Definitions** | 22–30 | State schemas, LLM setup, prompts, 5 tool functions |
+| **Graph & API** | 31–38 | 10 agent node functions, conditional routing, graph compilation |
+| **HITL Demo** | 40–44 | Manual HITL showcase (approve/revise/escalate paths), memory dump utilities |
+| **Tests** | 47–61 | 10 unit tests (isolated `:memory:` DB) + 7 end-to-end scenarios + HITL showcases |
+| **Evaluation** | 64–65 | Automated scorer (deterministic checks) + Model-as-Judge (semantic evaluation) |
+| **Interactive** | 67–69 | Full HITL chat harness for live scenario testing |
 
 ### Project Data (`project_data.json`)
 Loaded from GitHub at startup. Contains:
-- `kb_articles` — 17 knowledge-base articles with `id`, `title`, `text`, `category`, `tags`
+- `kb_articles` — 17 knowledge-base articles (ID, title, text, category, tags)
 - `account_context` — per-account CRM data (subscription tier, billing status, open tickets, known outages)
-- `routing_rules` — `(trigger_category, priority)` → `{route_to_team, recommended_action}`
-- `test_cases` — 7 test scenarios with `input`, `expected_*` fields, `simulate_human_decision`, `notes`
-- `memory_defaults` — pre-seeded long-term memory entries (preferences and history per account)
-- `settings` — configurable constants (`embedding_model`, `retriever_top_k`, `message_trim_max_tokens`, `default_tone`)
+- `routing_rules` — `(category, priority)` → `{route_to_team, recommended_action}` lookup table
+- `test_cases` — 7 test scenarios with expected results and human HITL decisions
+- `memory_defaults` — pre-seeded long-term memory entries (user preferences and history)
+- `settings` — tunable constants (embedding model, retriever top-K, token trim limits, default tone)
 
 ---
 
@@ -247,13 +285,28 @@ Loaded from GitHub at startup. Contains:
 
 | File | Purpose |
 |---|---|
-| `support_ticket_triage.ipynb` | Main submission notebook — all 69 cells |
-| `README.md` | This file — full project documentation |
-| `support_ticket_triage_blueprint.md` | Design blueprint — architecture decisions and phase plan |
-| `ai_agents_course_blueprint.md` | Course-level AI agents blueprint |
+| `support_ticket_triage_v1.ipynb` | Main submission notebook — 53 cells, all setup + tests + evaluation |
+| `README.md` | This file — complete project documentation |
+| `support_ticket_triage_blueprint_v3_4_final.md` | Design blueprint — architecture decisions and development phases |
+| `ai_agents_course_blueprint.md` | Course-level AI agents blueprint and learning objectives |
 | `Course_materials.md` | Reference notes from course lectures |
-| `memory_store.sqlite` | Long-term memory DB (created at first run) |
-| `workflow_state.sqlite` | LangGraph checkpoint DB (created at first run) |
+| `project_data.json` | KB articles, account contexts, routing rules, test cases, memory defaults, settings |
+| `memory_store.sqlite` | Long-term memory DB — created at first run, persists user preferences and history |
+| `workflow_state.sqlite` | LangGraph checkpoint DB — created at first run, persists workflow state across threads |
+| `kb_faiss_index/` | Cached FAISS vector index — created at first KB build, reused on subsequent runs |
+
+---
+
+## 🎯 Key Features & Innovations
+
+- **API-Forced Tool Call:** `routing_llm.bind_tools([route_policy_lookup], tool_choice="required")` enforced at OpenAI API level
+- **Conditional HITL Gate:** Smart routing — high-risk tickets interrupt for human review; low-risk auto-finalize
+- **3-Layer Memory:** Short-term (message trimming) · Long-term (SQLite profiles) · RAG (FAISS vector retrieval)
+- **Colab Optimization:** FAISS disk caching (skip rebuild on rerun) + SQLite WAL pragmas + OpenMP runtime guard
+- **Isolated Unit Tests:** 10 tests use `:memory:` SQLite — zero side effects on production DB
+- **Model-as-Judge:** Semantic evaluation of reply quality on groundedness · tone · completeness (1–5 scales)
+- **Cost Tracking:** Per-workflow token and spend metrics via OpenAI callback integration
+- **Guardrails:** PII redaction + forbidden topic blocking + audit logging
 
 ---
 
