@@ -5,6 +5,7 @@
 
 ## Support Ticket Triage — Multi-Agent Workflow
 
+![Project media](media.png)
 A production-inspired AI support triage system built on **LangGraph**, **LangChain**, and **OpenAI gpt-4o-mini**.
 It demonstrates how autonomous agents, deterministic business policies, and Human-in-the-Loop (HITL)
 supervision can be composed into a reliable, auditable, and personalisable support solution.
@@ -51,6 +52,7 @@ Includes **10 unit tests** (isolated `:memory:` SQLite database for memory funct
 ---
 
 ## 🔄 Workflow Architecture
+![Workflow graph](graph.png)
 
 ```
 user_request
@@ -297,6 +299,10 @@ Loaded from GitHub at startup. Contains:
 
 ---
 
+## 📜 License
+
+This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## 🎯 Key Features & Innovations
 
 - **API-Forced Tool Call:** `routing_llm.bind_tools([route_policy_lookup], tool_choice="required")` enforced at OpenAI API level
@@ -311,3 +317,14 @@ Loaded from GitHub at startup. Contains:
 ---
 
 *Built for the SoftUni "AI Agents and Workflows for Developers" course · May 2026*
+
+## Certificate
+
+Place your SoftUni course certificate image in the repository as `certificate.png` (or under an `assets/` folder). When present it will be displayed below:
+
+![Certificate](AI%20Agents%20and%20Workflows%20for%20Developers%20-%20April%202026%20-%20Certificate.jpeg)
+
+## Evaluation fedback(English)
+
+An exceptionally mature, production-grade project — 10 agent nodes, 5 deterministic @tool utilities, a 3-layer memory (short-term with tiktoken trimming, long-term SQLite, RAG FAISS with 17 KB of articles), a conditional HITL gate, SQLite Saver checkpointer, guardrails with PII redaction, a model-as-judge evaluator, cost tracking, 7 end-to-end and 10 unit test cases, and an interactive demo session.
+
