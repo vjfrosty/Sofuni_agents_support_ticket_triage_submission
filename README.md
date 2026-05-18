@@ -3,8 +3,6 @@
 
 **Author:** Yasen Ivanov
 
-## Support Ticket Triage — Multi-Agent Workflow
-
 ![Project media](media.png)
 A production-inspired AI support triage system built on **LangGraph**, **LangChain**, and **OpenAI gpt-4o-mini**.
 It demonstrates how autonomous agents, deterministic business policies, and Human-in-the-Loop (HITL)
